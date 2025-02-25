@@ -44,6 +44,54 @@ class UserService {
     })
   }
 
+  private signEmailVerifyToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    return signToken({
+      payload: {
+        user_id,
+        user_type: TokenType.EmailVerifyToken,
+        verify
+      },
+      privateKey: envConfig.secretOnPublicKey_Email as string,
+
+      optional: {
+        expiresIn: envConfig.expiresIn_email_token
+      }
+    })
+  }
+
+  private signAccessAndRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
+  }
+
+  private forgotPasswordToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    return signToken({
+      payload: {
+        user_id,
+        user_type: TokenType.ForgotPasswordToken,
+        verify
+      },
+      privateKey: envConfig.secretOnPublicKey_Forgot as string,
+
+      optional: {
+        expiresIn: envConfig.expiresIn_forgot_token
+      }
+    })
+  }
+
+  async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
+      user_id,
+      verify: verify
+    })
+    await databaseService.refreshToken.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+    )
+    return {
+      access_token,
+      refresh_token
+    }
+  }
+
   async refreshToken(user_id: string, verify: UserVerifyStatus, refresh_token: string) {
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id, verify }),

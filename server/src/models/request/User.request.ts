@@ -1,5 +1,5 @@
-import { JwtPayload } from 'jsonwebtoken'
-import { TokenType, UserVerifyStatus } from '../../constants/enums'
+import { JwtPayload } from 'jsonwebtoken';
+import { TokenType, UserVerifyStatus } from '../../constants/enums';
 
 export interface FollowReqBody {
   followed_user_id: string
@@ -15,6 +15,11 @@ export interface RefreshTokenReqBody {
 }
 export interface UserReq {
   email: string
+}
+
+export interface LoginReqBody {
+  email: string
+  password: string
 }
 
 export interface VerifyEmailReqBody {

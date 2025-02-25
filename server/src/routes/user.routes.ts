@@ -3,14 +3,15 @@ import {
   followController,
   unFollowController,
   getFollowersController,
-  getFollowingController
+  getFollowingController,
+  loginController
 
 } from "../controllers/user.controllers";
-import { followValidator, AccessTokenValidator, verifiedUserValidator } from "../middlewares/users.middlewares";
+import { followValidator, AccessTokenValidator, verifiedUserValidator, loginValidator } from "../middlewares/users.middlewares";
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
 
-
+usersRouter.post('/login', loginValidator, wrapAsync(loginController))
 
 
 /**

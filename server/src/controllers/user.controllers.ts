@@ -19,10 +19,21 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { WithId } from 'mongodb'
 import { ObjectId } from 'bson'
 import { UserVerifyStatus } from '~/constants/enums'
+import { LoginReqBody } from "../models/request/User.request";
 
 config();
 
-
+export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
+  const user = req.user as User
+  const user_id = user._id as ObjectId
+  
+  console.log(`User logged in with user_id: ${user_id.toString()}`)
+  const result = await usersService.login({ user_id: user_id.toString(), verify: UserVerifyStatus.Verified })
+  res.status(200).json({
+    message: USERS_MESSAGES.LOGIN_SUCCESS,
+    result
+  })
+}
 export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
   res: Response
