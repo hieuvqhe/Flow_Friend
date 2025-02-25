@@ -46,3 +46,11 @@ export interface ResetPasswordReqBody {
   confirm_password: string
   forgot_password_token: string
 }
+
+export interface RegisterReqBody {
+  email: string
+  name: string
+  password: string
+  confirm_password: string
+  date_of_birth: string
+}
