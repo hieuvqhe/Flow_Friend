@@ -34,6 +34,21 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
     result
   })
 }
+
+export const oauthController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
+  const { code } = req.query
+  const result = await usersService.oauth(code as string)
+  const urlRedirect = `${envConfig.client_redirect}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.newUser}&verify=${result.verify}`
+  res.redirect(urlRedirect)
+  res.status(200).json({
+    message: result.newUser ? USERS_MESSAGES.REGISTER_SUCCESS : USERS_MESSAGES.LOGIN_SUCCESS,
+    result: {
+      access_token: result.access_token,
+      refresh_token: result.refresh_token
+    }
+  })
+}
+
 export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
   res: Response
