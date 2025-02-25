@@ -373,6 +373,14 @@ class UserService {
     return Boolean(result)
   }
 
+  async logout(refresh_token: string) {
+    await databaseService.refreshToken.deleteOne({ token: refresh_token })
+
+    return {
+      message: USERS_MESSAGES.LOGOUT_SUCCESS
+    }
+  }
+
 }
 
 

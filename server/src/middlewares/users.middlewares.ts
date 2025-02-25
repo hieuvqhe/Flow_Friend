@@ -12,6 +12,10 @@ import  { Request} from'express'
 import { verifyAccessToken } from "../utils/common";
 import { hashPassword } from "~/utils/crypto";
 import usersService from "~/services/users.services";
+import { verifyToken } from "~/utils/jwt";
+import { JsonWebTokenError } from "jsonwebtoken";
+import { envConfig } from "~/constants/config";
+import _ from "lodash";
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
@@ -148,6 +152,52 @@ export const registerValidator = validate(
     ['body']
   )
 )
+
+export const RefreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        notEmpty: {
+          errorMessage: new ErrorWithStatus({
+            message: USERS_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
+            status: HTTP_STATUS.UNAUTHORIZED
+          })
+        },
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            try {
+              const [decoded_refresh_token, refresh_token] = await Promise.all([
+                verifyToken({ token: value, secretOnPublicKey: envConfig.secretOnPublicKey_Refresh as string }),
+                databaseService.refreshToken.findOne({ token: value })
+              ])
+
+              if (refresh_token === null) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXITS,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+
+              ;(req as Request).decoded_refresh_token = decoded_refresh_token
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: _.capitalize(error.message),
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
 export const followValidator = validate(
   checkSchema({
     followed_user_id: {

@@ -19,7 +19,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { WithId } from 'mongodb'
 import { ObjectId } from 'bson'
 import { UserVerifyStatus } from '~/constants/enums'
-import { LoginReqBody,RegisterReqBody } from "../models/request/User.request";
+import { LoginReqBody,RegisterReqBody, LogoutReqBody } from "../models/request/User.request";
 
 config();
 
@@ -60,6 +60,14 @@ export const oauthController = async (req: Request<ParamsDictionary, any, LoginR
       refresh_token: result.refresh_token
     }
   })
+}
+
+export const logoutController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+  const { refresh_token } = req.body
+
+  const result = await usersService.logout(refresh_token as string)
+
+  res.json(result)
 }
 
 export const refreshTokenController = async (
