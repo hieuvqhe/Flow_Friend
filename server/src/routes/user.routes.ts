@@ -7,10 +7,28 @@ import {
   loginController,
   oauthController,
   registerController,
-  logoutController
+  logoutController,
+  VerifyForgotPasswordController,
+  emailVerifyController,
+  resendVerifyEmailController,
+  refreshTokenController,
+  resetPasswordController,
+  forgotPasswordController
 
 } from "../controllers/user.controllers";
-import { followValidator, AccessTokenValidator, verifiedUserValidator, loginValidator,registerValidator, RefreshTokenValidator } from "../middlewares/users.middlewares";
+import { 
+  followValidator, 
+  AccessTokenValidator, 
+  verifiedUserValidator, 
+  loginValidator,
+  registerValidator, 
+  RefreshTokenValidator,
+  resetPasswordValidator,
+  verifyForgotPasswordTokenValidator, 
+  emailVerifyTokenValidator ,
+  forgotPasswordValidator
+  
+ } from "../middlewares/users.middlewares";
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
 
@@ -20,6 +38,27 @@ usersRouter.get('/oauth/google', wrapAsync(oauthController))
 
 usersRouter.post('/register', registerValidator, wrapAsync(registerController))
 usersRouter.post('/logout', AccessTokenValidator, RefreshTokenValidator, wrapAsync(logoutController))
+
+
+/**
+ * Description: refresh token
+ * Path: /refresh-token
+ * method: POST
+ * Header: {refresh_token: string}
+ */
+usersRouter.post('/refresh-token', RefreshTokenValidator, wrapAsync(refreshTokenController))
+
+usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVerifyController))
+usersRouter.post('/resend-verify-email', AccessTokenValidator, wrapAsync(resendVerifyEmailController))
+usersRouter.post('/forgot-password', forgotPasswordValidator, wrapAsync(forgotPasswordController))
+usersRouter.post(
+  '/verify-forgot-password',
+  verifyForgotPasswordTokenValidator,
+  wrapAsync(VerifyForgotPasswordController)
+)
+
+usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPasswordController))
+
 /**
  * Description: follow someone
  * Path: /follow
