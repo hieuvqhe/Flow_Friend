@@ -3,16 +3,23 @@ import {
   followController,
   unFollowController,
   getFollowersController,
-  getFollowingController
+  getFollowingController,
+  loginController,
+  oauthController,
+  registerController,
+  logoutController
 
 } from "../controllers/user.controllers";
-import { followValidator, AccessTokenValidator, verifiedUserValidator } from "../middlewares/users.middlewares";
+import { followValidator, AccessTokenValidator, verifiedUserValidator, loginValidator,registerValidator, RefreshTokenValidator } from "../middlewares/users.middlewares";
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
 
+usersRouter.post('/login', loginValidator, wrapAsync(loginController))
+usersRouter.get('/oauth/google', wrapAsync(oauthController))
 
 
-
+usersRouter.post('/register', registerValidator, wrapAsync(registerController))
+usersRouter.post('/logout', AccessTokenValidator, RefreshTokenValidator, wrapAsync(logoutController))
 /**
  * Description: follow someone
  * Path: /follow
