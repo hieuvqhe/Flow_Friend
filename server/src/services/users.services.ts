@@ -10,7 +10,7 @@ import { signToken } from '~/utils/jwt'
 import { TokenType, UserVerifyStatus } from '~/constants/enums'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { verifyEmail as sendVerifyEmail, verifyEmail, verifyForgotPassword } from '~/utils/sendmail'
-import { RegisterReqBody } from '~/models/request/User.request'
+import { RegisterReqBody, UpdateMeReqBody } from '~/models/request/User.request'
 import User from '~/models/schemas/User.schema'
 import { ErrorWithStatus } from '~/models/Errors'
 import { AccountStatus } from '~/constants/enums'
@@ -379,6 +379,27 @@ class UserService {
     return {
       message: USERS_MESSAGES.LOGOUT_SUCCESS
     }
+  }
+
+  async getUserProfileById(user_id: string){
+    const result = await databaseService.users.findOne({ followed_user_id: new ObjectId(user_id) })
+    return result
+  }
+
+  async updateMyProfile(user_id: string, payload: UpdateMeReqBody){
+    const result = await databaseService.users.findOneAndUpdate(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          ...(payload as UpdateMeReqBody & { date_of_birth?: Date })
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
   }
 
 }

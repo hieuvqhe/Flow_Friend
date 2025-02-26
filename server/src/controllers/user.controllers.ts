@@ -7,7 +7,8 @@ import {
   VerifyEmailReqBody, 
   ForgotPasswordReqBody,
   VerifyForgotPasswordReqBody,
-  ResetPasswordReqBody
+  ResetPasswordReqBody,
+  UpdateMeReqBody
  } from "../models/request/User.request";
 import { config } from "dotenv";
 import { envConfig } from "../constants/config";
@@ -20,6 +21,7 @@ import { WithId } from 'mongodb'
 import { ObjectId } from 'bson'
 import { UserVerifyStatus } from '~/constants/enums'
 import { LoginReqBody,RegisterReqBody, LogoutReqBody } from "../models/request/User.request";
+import { pick } from "lodash";
 
 config();
 
@@ -188,5 +190,35 @@ export const getFollowersController = async (req: Request<ParamsDictionary, any,
   res.json({
     message: USERS_MESSAGES.GET_FOLLOWERS_SUCCESSFULLY,
     result: result
+  })
+}
+
+export const getProfileUserByIdController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
+  const { user_id } = req.params
+  const result = await usersService.getUserProfileById(user_id)
+  res.json({
+    message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
+    result: result
+  })
+}
+
+export const updateMyProfileController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
+  const { user_id } = req.decode_authorization as TokenPayload
+
+  const body = pick(req.body, [
+    'name',
+    'date_of_birth',
+    'bio',
+    'location',
+    'website',
+    'username',
+    'avatar',
+    'cover_photo'
+  ]) as UpdateMeReqBody
+
+  const user = await usersService.updateMyProfile(user_id, body)
+  res.json({
+    message: USERS_MESSAGES.UPDATE_PROFILE_SUCCESS,
+    result: user
   })
 }

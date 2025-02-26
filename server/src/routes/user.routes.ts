@@ -7,7 +7,9 @@ import {
   loginController,
   oauthController,
   registerController,
-  logoutController
+  logoutController,
+  getProfileUserByIdController,
+  updateMyProfileController
 
 } from "../controllers/user.controllers";
 import { followValidator, AccessTokenValidator, verifiedUserValidator, loginValidator,registerValidator, RefreshTokenValidator } from "../middlewares/users.middlewares";
@@ -55,5 +57,21 @@ usersRouter.get('/followers', AccessTokenValidator, verifiedUserValidator, follo
  */
 usersRouter.get('/following', AccessTokenValidator, verifiedUserValidator, followValidator, wrapAsync(getFollowingController))
 
+/**
+ * Description: get user profile by _id
+ * Path: /profile/:user_id
+ * method: get
+ * body: {user_id: string}
+ */
+usersRouter.get('/profile/:user_id', AccessTokenValidator, verifiedUserValidator, wrapAsync(getProfileUserByIdController))
+
+/**
+ * Description: Update my profile
+ * Path: /me
+ * method: PATCH
+ * Header: {Authorization: Bearer <access_token>}
+ * body: User Schema
+ */
+usersRouter.patch('/me', AccessTokenValidator, verifiedUserValidator, wrapAsync(updateMyProfileController))
 
 export default usersRouter
