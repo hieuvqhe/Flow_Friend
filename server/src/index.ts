@@ -6,6 +6,7 @@ import cors, { CorsOptions } from 'cors'
 import { createServer } from 'http'
 import { envConfig } from "./constants/config";
 import helmet from 'helmet'
+import { hostname } from "os";
 config()
 databaseService
   .connect()
@@ -40,6 +41,6 @@ app.use((err: Error & { status?: number }, req: express.Request, res: express.Re
   } as ErrorResponse);
 });
 
-httpServer.listen(port, () => {
+httpServer.listen(port,() => {
   console.log(`Server is running on port ${port}`);
 });
