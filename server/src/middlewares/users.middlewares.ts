@@ -11,6 +11,9 @@ import { UserVerifyStatus } from "../constants/enums";
 import  { Request} from'express'
 import { verifyAccessToken } from "../utils/common";
 
+
+
+
 export const followValidator = validate(
   checkSchema({
     followed_user_id: {
