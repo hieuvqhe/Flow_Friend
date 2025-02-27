@@ -82,3 +82,21 @@ tweetsRouter.get(
   wrapAsync(audienceValidator),
   wrapAsync(getTweetChildrenController)
 )
+
+/**
+ * Description: get new feeds
+ * Path: /new-feeds
+ * Method: GET
+ * Body: user_id: string
+ * type: tweetTypes
+ * Header: {Authorization: Bearer <access_token>}
+ * Query: {limit: number,page:number,tweet_type: TweetType}
+ */
+tweetsRouter.get(
+  '/new/new-feeds',
+
+  AccessTokenValidator,
+  verifiedUserValidator,
+  paginationValidator,
+  wrapAsync(getNewTweetController)
+)
