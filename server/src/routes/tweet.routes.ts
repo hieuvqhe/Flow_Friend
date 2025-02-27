@@ -62,3 +62,23 @@ tweetsRouter.get(
   wrapAsync(audienceValidator),
   wrapAsync(getTweetDetailsController)
 )
+
+
+/**
+ * Description: get Tweet Children
+ * Path: /:tweet_id/children
+ * Method: GET
+ * Body: user_id: string
+ * type: tweetTypes
+ *  * Header: {Authorization: Bearer <access_token>}
+ * Query: {limit: number,page:number,tweet_type: TweetType}
+ */
+tweetsRouter.get(
+  '/:tweet_id/children',
+  tweetIdValidator,
+  getTweetChildrenValidator,
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(audienceValidator),
+  wrapAsync(getTweetChildrenController)
+)
