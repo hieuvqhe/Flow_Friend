@@ -46,3 +46,19 @@ tweetsRouter.post(
  * type: tweetTypes
  */
 tweetsRouter.get('/', AccessTokenValidator, verifiedUserValidator, wrapAsync(getAllTweetController))
+/**
+ * Description: get Tweet details
+ * Path: /
+ * Method: GET
+ * Body: user_id: string
+ *  * Header: {Authorization: Bearer <access_token>}
+ * type: tweetTypes
+ */
+tweetsRouter.get(
+  '/:tweet_id',
+  tweetIdValidator,
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(audienceValidator),
+  wrapAsync(getTweetDetailsController)
+)
