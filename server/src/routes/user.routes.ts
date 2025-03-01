@@ -7,7 +7,15 @@ import {
   loginController,
   oauthController,
   registerController,
-  logoutController
+  logoutController,
+  refreshTokenController,
+  resendVerifyEmailController,
+  resetPasswordController,
+  VerifyForgotPasswordController,
+  emailVerifyController,
+  forgotPasswordController,
+  getProfileUserByIdController,
+  updateMyProfileController
 
 } from "../controllers/user.controllers";
 import { 
@@ -20,8 +28,7 @@ import {
   resetPasswordValidator,
   verifyForgotPasswordTokenValidator, 
   emailVerifyTokenValidator ,
-  forgotPasswordValidator
-  
+  forgotPasswordValidator,
  } from "../middlewares/users.middlewares";
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
