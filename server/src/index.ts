@@ -25,7 +25,7 @@ const port = envConfig.port || 3002
 app.use(helmet())
 app.use(cors())
 app.use(express.json())
-app.use('/users', usersRouter)
+app.use('/users/', usersRouter)
 
 
 interface ErrorResponse {
