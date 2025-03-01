@@ -15,12 +15,7 @@ import { config } from 'dotenv'
 import { PROMPT_CHAT, PROMPT_TWEET_FREE, PROMPT_TWEET_PREMIUM } from '~/constants/prompt'
 import User from '~/models/schemas/User.schema'
 config()
-if (!globalThis.fetch) {
-  ;(globalThis as any).fetch = nodeFetch.default
-  ;(globalThis as any).Headers = nodeFetch.Headers
-  ;(globalThis as any).Request = nodeFetch.Request
-  ;(globalThis as any).Response = nodeFetch.Response
-}
+
 class TweetService {
   async checkAndCreateHashtag(hashtags: string[]) {
     console.log('hashtags', hashtags)
