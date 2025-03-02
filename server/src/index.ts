@@ -31,7 +31,6 @@ app.use('/users/', usersRouter)
 app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
 
-
 interface ErrorResponse {
   message: string;
   stack?: string;
