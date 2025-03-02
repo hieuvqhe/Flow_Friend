@@ -45,8 +45,16 @@ class DatabaseService {
     return this.db.collection(envConfig.followersCollection)
   }
 
+  get comments(): Collection<Comment>{
+    return this.db.collection((envConfig.commentCollection))
+  }
+
   get refreshToken(): Collection<RefreshToken> {
     return this.db.collection(envConfig.refreshCollection)
+  }
+
+  get tweets(): Collection<User> {
+    return this.db.collection(envConfig.tweetsCollection)
   }
 }
 const databaseService = new DatabaseService()
