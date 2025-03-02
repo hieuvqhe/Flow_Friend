@@ -7,6 +7,8 @@ import { createServer } from 'http'
 import { envConfig } from "./constants/config";
 import helmet from 'helmet'
 import { hostname } from "os";
+import { tweetsRouter } from "./routes/tweet.routes";
+import { commentsRouter } from "./routes/comment.routes";
 config()
 databaseService
   .connect()
@@ -26,6 +28,8 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 app.use('/users/', usersRouter)
+app.use('/tweets/', tweetsRouter)
+app.use('/comments/', commentsRouter)
 
 
 interface ErrorResponse {

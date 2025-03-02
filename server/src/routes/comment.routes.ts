@@ -4,7 +4,7 @@ import { createCommentValidator, paginationValidator, tweetIdValidator } from '~
 import { AccessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapAsync } from '~/utils/handler'
 
-const commentsRouter = Router()
+export const commentsRouter = Router()
 
 /**
  * Description: get comment
@@ -28,7 +28,7 @@ commentsRouter.get(
  * Header: {Authorization: Bearer <access_token>}
  * body: {tweet_id: string, user_id: string, commentContent: string, commentLink: CommentStatus[]}
  */
-commentsRouter.get(
+commentsRouter.post(
   '/',
   AccessTokenValidator,
   verifiedUserValidator,
