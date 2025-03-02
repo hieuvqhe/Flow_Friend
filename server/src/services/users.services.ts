@@ -28,8 +28,7 @@ class UserService {
       },
       privateKey: envConfig.privateKey_access_token as string,
       optional: {
-        // expiresIn: envConfig.expiresIn_access_token
-        expiresIn: envConfig.expiresIn_access_token ? Number(envConfig.expiresIn_access_token) : undefined
+        expiresIn: envConfig.expiresIn_access_token
       }
     })
   }
@@ -44,8 +43,7 @@ class UserService {
       privateKey: envConfig.privateKey_refresh_token as string,
 
       optional: {
-        //expiresIn: envConfig.expiresIn_refresh_token
-        expiresIn: envConfig.expiresIn_refresh_token ? Number(envConfig.expiresIn_refresh_token) : undefined
+        expiresIn: envConfig.expiresIn_refresh_token
       }
     })
   }
@@ -60,8 +58,7 @@ class UserService {
       privateKey: envConfig.secretOnPublicKey_Email as string,
 
       optional: {
-        //expiresIn: envConfig.expiresIn_email_token
-        expiresIn: envConfig.expiresIn_email_token ? Number(envConfig.expiresIn_email_token) : undefined
+        expiresIn: envConfig.expiresIn_email_token
       }
     })
   }
@@ -80,8 +77,7 @@ class UserService {
       privateKey: envConfig.secretOnPublicKey_Forgot as string,
 
       optional: {
-        //expiresIn: envConfig.expiresIn_forgot_token
-        expiresIn: envConfig.expiresIn_forgot_token ? Number(envConfig.expiresIn_forgot_token) : undefined
+        expiresIn: envConfig.expiresIn_forgot_token
       }
     })
   }
@@ -333,6 +329,7 @@ class UserService {
       message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
     }
   }
+  
 
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const forgot_password_token = await this.forgotPasswordToken({ user_id, verify: verify })
