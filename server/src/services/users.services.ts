@@ -28,7 +28,8 @@ class UserService {
       },
       privateKey: envConfig.privateKey_access_token as string,
       optional: {
-        expiresIn: envConfig.expiresIn_access_token
+        // expiresIn: envConfig.expiresIn_access_token
+        expiresIn: envConfig.expiresIn_access_token ? Number(envConfig.expiresIn_access_token) : undefined
       }
     })
   }
@@ -43,7 +44,8 @@ class UserService {
       privateKey: envConfig.privateKey_refresh_token as string,
 
       optional: {
-        expiresIn: envConfig.expiresIn_refresh_token
+        //expiresIn: envConfig.expiresIn_refresh_token
+        expiresIn: envConfig.expiresIn_refresh_token ? Number(envConfig.expiresIn_refresh_token) : undefined
       }
     })
   }
@@ -58,7 +60,8 @@ class UserService {
       privateKey: envConfig.secretOnPublicKey_Email as string,
 
       optional: {
-        expiresIn: envConfig.expiresIn_email_token
+        //expiresIn: envConfig.expiresIn_email_token
+        expiresIn: envConfig.expiresIn_email_token ? Number(envConfig.expiresIn_email_token) : undefined
       }
     })
   }
@@ -77,12 +80,13 @@ class UserService {
       privateKey: envConfig.secretOnPublicKey_Forgot as string,
 
       optional: {
-        expiresIn: envConfig.expiresIn_forgot_token
+        //expiresIn: envConfig.expiresIn_forgot_token
+        expiresIn: envConfig.expiresIn_forgot_token ? Number(envConfig.expiresIn_forgot_token) : undefined
       }
     })
   }
 
-  
+
 
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
@@ -301,7 +305,7 @@ class UserService {
         }
       }
     )
-    
+
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       verify: UserVerifyStatus.Verified
@@ -381,12 +385,12 @@ class UserService {
     }
   }
 
-  async getUserProfileById(user_id: string){
+  async getUserProfileById(user_id: string) {
     const result = await databaseService.users.findOne({ followed_user_id: new ObjectId(user_id) })
     return result
   }
 
-  async updateMyProfile(user_id: string, payload: UpdateMeReqBody){
+  async updateMyProfile(user_id: string, payload: UpdateMeReqBody) {
     const result = await databaseService.users.findOneAndUpdate(
       {
         _id: new ObjectId(user_id)
