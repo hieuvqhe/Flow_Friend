@@ -1,6 +1,7 @@
 import { ObjectId } from 'bson'
 import databaseService from './database.services'
 import Comment, { CommentStatus } from '~/models/schemas/Comment.schema'
+import { COMMENT_MESSAGES } from '~/constants/messages'
 
 class CommentServices {
   async getAllCommentInTweet(tweet_id: string, limit: number, page: number) {
@@ -61,7 +62,23 @@ class CommentServices {
     return comment
   }
 
-  
+  async editComment(comment_id: string, user_id: string, new_commentContent: string) {
+    if (!new_commentContent) {
+      return { message: COMMENT_MESSAGES.NO_EDIT_COMMENT }
+    }
+    const comment = await databaseService.comments.findOne({
+      _id: new ObjectId(comment_id),
+      user_id: new ObjectId(user_id)
+    })
+    if (comment?.commentContent === new_commentContent) {
+      return { message: COMMENT_MESSAGES.NO_EDIT_COMMENT }
+    }
+    const result = await databaseService.comments.updateOne(
+      { _id: new ObjectId(comment_id), user_id: new ObjectId(user_id) },
+      { $set: { commentContent: new_commentContent }, $currentDate: { updatedAt: true } }
+    )
+    return result
+  }
 }
 
 const commentServices = new CommentServices()
