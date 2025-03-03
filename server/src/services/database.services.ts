@@ -3,6 +3,7 @@ import Follower from '../models/schemas/Follower.schema'
 import { envConfig } from '../constants/config'
 import User from '../models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Hashtag from '~/models/schemas/Hashtag.schema'
 const uri = `mongodb+srv://${envConfig.db_username}:${envConfig.db_password}@minhdevmongo.hzvnp.mongodb.net/?retryWrites=true&w=majority&appName=minhdevMongo`
 
 class DatabaseService {
@@ -64,6 +65,11 @@ class DatabaseService {
   get bookmarks(): Collection<User> {
     return this.db.collection(envConfig.bookmarksCollection)
   }
+  
+  get hashtags(): Collection<Hashtag> {
+    return this.db.collection(envConfig.hashtagsCollection)
+  }
+  
 }
 const databaseService = new DatabaseService()
 export default databaseService

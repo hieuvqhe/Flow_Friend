@@ -63,7 +63,6 @@ tweetsRouter.get(
   wrapAsync(getTweetDetailsController)
 )
 
-
 /**
  * Description: get Tweet Children
  * Path: /:tweet_id/children
@@ -99,4 +98,19 @@ tweetsRouter.get(
   verifiedUserValidator,
   paginationValidator,
   wrapAsync(getNewTweetController)
+)
+
+/**
+ * Description: edit tweet
+ * Path: /edit
+ * Method: PUT
+ * Body:  tweet_id: string, new_tweetContent: string
+ * Header: {Authorization: Bearer <access_token>}
+ */
+tweetsRouter.put(
+  '/edit',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  editTweetValidator,
+  wrapAsync(editTweetController)
 )
