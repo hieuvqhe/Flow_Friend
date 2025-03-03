@@ -56,6 +56,14 @@ class DatabaseService {
   get tweets(): Collection<User> {
     return this.db.collection(envConfig.tweetsCollection)
   }
+
+  get likes(): Collection<User> {
+    return this.db.collection(envConfig.likesCollection)
+  }
+
+  get bookmarks(): Collection<User> {
+    return this.db.collection(envConfig.bookmarksCollection)
+  }
 }
 const databaseService = new DatabaseService()
 export default databaseService
