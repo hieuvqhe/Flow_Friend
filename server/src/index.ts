@@ -6,7 +6,6 @@ import cors, { CorsOptions } from 'cors'
 import { createServer } from 'http'
 import { envConfig } from "./constants/config";
 import helmet from 'helmet'
-import { hostname } from "os";
 config()
 databaseService
   .connect()
