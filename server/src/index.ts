@@ -6,6 +6,7 @@ import cors, { CorsOptions } from 'cors'
 import { createServer } from 'http'
 import { envConfig } from "./constants/config";
 import helmet from 'helmet'
+import { hostname } from "os";
 config()
 databaseService
   .connect()
@@ -25,7 +26,8 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 app.use('/users/', usersRouter)
-
+app.use('/tweets/', tweetsRouter)
+app.use('/comments/', commentsRouter)
 
 interface ErrorResponse {
   message: string;

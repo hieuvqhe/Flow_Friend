@@ -82,7 +82,7 @@ class UserService {
     })
   }
 
-  
+
 
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
@@ -301,7 +301,7 @@ class UserService {
         }
       }
     )
-    
+
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       verify: UserVerifyStatus.Verified
@@ -329,6 +329,7 @@ class UserService {
       message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
     }
   }
+  
 
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const forgot_password_token = await this.forgotPasswordToken({ user_id, verify: verify })
@@ -381,12 +382,12 @@ class UserService {
     }
   }
 
-  async getUserProfileById(user_id: string){
+  async getUserProfileById(user_id: string) {
     const result = await databaseService.users.findOne({ followed_user_id: new ObjectId(user_id) })
     return result
   }
 
-  async updateMyProfile(user_id: string, payload: UpdateMeReqBody){
+  async updateMyProfile(user_id: string, payload: UpdateMeReqBody) {
     const result = await databaseService.users.findOneAndUpdate(
       {
         _id: new ObjectId(user_id)
