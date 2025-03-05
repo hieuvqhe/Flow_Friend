@@ -9,6 +9,7 @@ import helmet from 'helmet'
 import { hostname } from "os";
 import { tweetsRouter } from "./routes/tweet.routes";
 import { commentsRouter } from "./routes/comment.routes";
+import bookmarksRouter from "./routes/bookmarks.routes";
 config()
 databaseService
   .connect()
