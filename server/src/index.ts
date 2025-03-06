@@ -9,20 +9,21 @@ import helmet from 'helmet'
 import { hostname } from "os";
 import { tweetsRouter } from "./routes/tweet.routes";
 import { commentsRouter } from "./routes/comment.routes";
+import bookmarksRouter from "./routes/bookmarks.routes";
 config()
 databaseService
   .connect()
   .then(() => {
     databaseService.indexUsers()
     databaseService.indexFollowers()
-    
+
   })
   .catch((error) => {
     console.error("Error connecting to the database:", error);
     process.exit(1);
   });
-  const app = express()
-  const httpServer = createServer(app)
+const app = express()
+const httpServer = createServer(app)
 const port = envConfig.port || 3002
 app.use(helmet())
 app.use(cors())
@@ -30,6 +31,7 @@ app.use(express.json())
 app.use('/users/', usersRouter)
 app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
+app.use('/bookmarks/', bookmarksRouter)
 
 interface ErrorResponse {
   message: string;
@@ -44,6 +46,6 @@ app.use((err: Error & { status?: number }, req: express.Request, res: express.Re
   } as ErrorResponse);
 });
 
-httpServer.listen(port,() => {
+httpServer.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
