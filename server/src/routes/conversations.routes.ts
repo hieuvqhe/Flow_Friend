@@ -35,3 +35,17 @@ conversationsRouter.get(
     wrapAsync(getConversationsByReceiverIdController)
   )
   
+
+  /**
+ * Description:get all conversation
+ * Path: /all_conversation
+ * Method: GET
+ * header: {Authorization:Bearer <access_token> }
+ */
+conversationsRouter.get(
+    '/all_conversation',
+    AccessTokenValidator,
+    verifiedUserValidator,
+    wrapAsync(getAllConverSationsController)
+  )
+  
