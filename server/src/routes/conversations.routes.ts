@@ -17,3 +17,21 @@ import { AccessTokenValidator, getConversationsValidator, verifiedUserValidator 
 import { wrapAsync } from '~/utils/handler'
 
 const conversationsRouter = Router()
+
+
+/**
+ * Description: get receive
+ * Path: /receivers/:receiver_id
+ * Method: get
+ * params: {limit: number, page: number}
+ * header: {Authorization:Bearer <access_token> }
+ */
+conversationsRouter.get(
+    '/receivers/:receiver_id',
+    AccessTokenValidator,
+    verifiedUserValidator,
+    paginationValidator,
+    getConversationsValidator,
+    wrapAsync(getConversationsByReceiverIdController)
+  )
+  
