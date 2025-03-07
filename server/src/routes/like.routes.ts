@@ -19,3 +19,18 @@ likesTweetRouter.post(
   tweetIdValidator,
   wrapAsync(likeTweetController)
 )
+
+/**
+ * Description:Unlike Tweet
+ * Path: /tweets/:tweet_id
+ * Method: DELETE
+ * Body: {tweet_id: string}
+ * header: {Authorization:Bearer <access_token> }
+ */
+likesTweetRouter.delete(
+  '/:tweet_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  tweetIdValidator,
+  wrapAsync(unLikeTweetController)
+)

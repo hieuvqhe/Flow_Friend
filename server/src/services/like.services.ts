@@ -21,7 +21,21 @@ class LikesTweet {
       return { message: LIKES_MESSAGE.ALREADY_LIKED_THIS_TWEET }
     }
   }
-  
+  async unLikesTweet(user_id: string, tweet_id: string) {
+    const existsLike = await databaseService.likes.findOne({
+      user_id: new ObjectId(user_id),
+      tweet_id: new ObjectId(tweet_id)
+    })
+    if (existsLike) {
+      const result = await databaseService.likes.deleteOne({
+        user_id: new ObjectId(user_id),
+        tweet_id: new ObjectId(tweet_id)
+      })
+      return { message: LIKES_MESSAGE.UN_LIKES_TWEET_SUCCESS, result: result }
+    } else {
+      return { message: LIKES_MESSAGE.ALREADY_UN_LIKED_THIS_TWEET }
+    }
+  }
   
 }
 
