@@ -6,6 +6,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Hashtag from '~/models/schemas/Hashtag.schema'
 import Conversations from '~/models/schemas/conversations.schema'
 import { Bookmark } from '~/models/schemas/Bookmark.schema'
+import VideoStatus from '~/models/schemas/VideoStatus.schema'
 
 const uri = `mongodb+srv://${envConfig.db_username}:${envConfig.db_password}@minhdevmongo.hzvnp.mongodb.net/?retryWrites=true&w=majority&appName=minhdevMongo`
 
@@ -67,6 +68,10 @@ class DatabaseService {
 
   get bookmarks(): Collection<Bookmark> {
     return this.db.collection(envConfig.bookmarksCollection)
+  }
+
+  get videoStatus(): Collection<VideoStatus> {
+    return this.db.collection(envConfig.VideoStatusCollection)
   }
 
   get hashtags(): Collection<Hashtag> {
