@@ -48,4 +48,34 @@ conversationsRouter.get(
     verifiedUserValidator,
     wrapAsync(getAllConverSationsController)
   )
+
+
+  /**
+ * Description: edit message in conversation
+ * Path: /message/:messages_id
+ * Method: PUT
+ * header: {Authorization:Bearer <access_token> }
+ * body: {content: string}
+ */
+conversationsRouter.put(
+  '/message/:messages_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  editMessageValidator,
+  wrapAsync(editMessageInConversationController)
+)
+
+/**
+ * Description: set emoji message in conversation
+ * Path: /message/emoji/:messages_id
+ * Method: post
+ * header: {Authorization:Bearer <access_token> }
+ */
+conversationsRouter.post(
+  '/message/emoji/:messages_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  deleteMessageValidator,
+  wrapAsync(setEmojiMessageInConversationController)
+)
   export default conversationsRouter
