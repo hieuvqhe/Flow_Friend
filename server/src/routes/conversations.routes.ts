@@ -48,4 +48,4 @@ conversationsRouter.get(
     verifiedUserValidator,
     wrapAsync(getAllConverSationsController)
   )
-  
+  export default conversationsRouter
