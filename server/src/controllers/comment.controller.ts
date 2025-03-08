@@ -33,23 +33,30 @@ export const createCommentController = async (
   const { tweet_id, commentContent, commentLink } = req.body
   const { user_id } = (req as Request).decode_authorization as TokenPayload
   const result = await commentServices.createComment(tweet_id, user_id, commentContent, commentLink)
-  res.json({
-    message: COMMENT_MESSAGES.CREATE_COMMENT_SUCCESS,
-    result
-  })
+  res.json({ message: COMMENT_MESSAGES.CREATE_COMMENT_SUCCESS, result })
 }
 
 export const editCommentController = async (
   req: Request<ParamsDictionary, any, getCommentTweetReqBody>,
   res: Response
 ) => {
-  
-  const {comment_id, commentContent} = req.body
-  const {user_id} = (req as Request).decode_authorization as TokenPayload
+  const { comment_id, commentContent } = req.body
+  const { user_id } = (req as Request).decode_authorization as TokenPayload
   const result = await commentServices.editComment(comment_id, user_id, commentContent)
 
   res.json({
-    message: COMMENT_MESSAGES.EDIT_COMMENT_SUCCESS,
-    
+    message: COMMENT_MESSAGES.EDIT_COMMENT_SUCCESS
+  })
+}
+
+export const deleteCommentController = async (
+  req: Request<ParamsDictionary, any, getCommentTweetReqBody>,
+  res: Response
+) => {
+  const { comment_id } = req.params
+  const result = await commentServices.deleteComment(comment_id)
+  res.json({
+    message: COMMENT_MESSAGES.DELETE_COMMENT_SUCCESS,
+    result
   })
 }
