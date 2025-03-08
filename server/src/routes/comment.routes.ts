@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createCommentController, editCommentController, getCommentTweetController } from '~/controllers/comment.controller'
+import { createCommentController, deleteCommentController, editCommentController, getCommentTweetController } from '~/controllers/comment.controller'
 import { createCommentValidator, paginationValidator, tweetIdValidator } from '~/middlewares/tweets.middlewares'
 import { AccessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapAsync } from '~/utils/handler'
@@ -50,4 +50,18 @@ commentsRouter.put(
   verifiedUserValidator,
   tweetIdValidator,
   wrapAsync(editCommentController)
+)
+
+/**
+ * Description: delete comment tweet
+ * Path: /
+ * method: delete
+ * params: {comment_id: string}
+ * Header: {Authorization:Bearer <access_token> }
+ */
+commentsRouter.delete(
+  '/',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(deleteCommentController)
 )
