@@ -78,4 +78,32 @@ conversationsRouter.post(
   deleteMessageValidator,
   wrapAsync(setEmojiMessageInConversationController)
 )
+
+/**
+ * Description: delete message in conversation
+ * Path: /message/:messages_id
+ * Method: DELETE
+ * header: {Authorization:Bearer <access_token> }
+ */
+conversationsRouter.delete(
+  '/message/:messages_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  deleteMessageValidator,
+  wrapAsync(deleteMessageInConversationController)
+)
+
+/**
+ * Description: delete all message in conversation
+ * Path: /message/:messages_id
+ * Method: DELETE
+ * header: {Authorization:Bearer <access_token> }
+ */
+conversationsRouter.delete(
+  '/message/:receive_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  deleteAllMessageInConversationValidator,
+  wrapAsync(deleteAllMessageInConversationController)
+)
   export default conversationsRouter

@@ -50,16 +50,17 @@ class CommentServices {
 
   async createComment(tweet_id: string, user_id: string, commentContent: string, commentLink: CommentStatus[]) {
     const _id = new ObjectId()
-    const comment = await databaseService.comments.insertOne(
-      new Comment({
-        _id,
-        tweet_id: new ObjectId(tweet_id),
-        user_id: new ObjectId(user_id),
-        commentContent,
-        commentLink
-      })
-    )
-    return comment
+    const comment = new Comment({
+      _id,
+      tweet_id: new ObjectId(tweet_id),
+      user_id: new ObjectId(user_id),
+      commentContent,
+      commentLink
+    })
+
+    const insertedComment = await databaseService.comments.insertOne({ ...comment })
+
+    return insertedComment
   }
 
   async editComment(comment_id: string, user_id: string, new_commentContent: string) {
@@ -77,6 +78,21 @@ class CommentServices {
       { _id: new ObjectId(comment_id), user_id: new ObjectId(user_id) },
       { $set: { commentContent: new_commentContent }, $currentDate: { updatedAt: true } }
     )
+    return result
+  }
+
+  async deleteComment(comment_id: string) {
+    const commentTweet = await databaseService.comments.findOne({
+      _id: new ObjectId(comment_id)
+    })
+    if (!commentTweet) {
+      return {
+        message: COMMENT_MESSAGES.NO_COMMENT_TO_DELETE
+      }
+    }
+    const result = await databaseService.comments.deleteOne({
+      _id: new ObjectId(comment_id)
+    })
     return result
   }
 }
