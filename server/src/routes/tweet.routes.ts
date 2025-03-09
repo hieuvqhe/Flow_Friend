@@ -114,3 +114,17 @@ tweetsRouter.put(
   editTweetValidator,
   wrapAsync(editTweetController)
 )
+
+/**
+ * Description: delete tweet
+ * Path: /:tweet_id
+ * Method: PUT
+ * Header: {Authorization: Bearer <access_token>}
+ */
+tweetsRouter.delete(
+  '/:tweet_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  deleteTweetValidator,
+  wrapAsync(deleteTweetController)
+)
