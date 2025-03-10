@@ -81,7 +81,7 @@ export const verifyForgotPassword = (
 ) => {
   return sendVerifyEmail(
     toAddress,
-    'Verify your email',
+    'Verify your email now',
     template
       .replace('{{link}}', `${envConfig.client_url}/verify-forgot-password?token=${forgot_verify_token}`)
       .replace('{{name}}', `${toAddress.split('@')[0]?.split('+')[0]}`)
