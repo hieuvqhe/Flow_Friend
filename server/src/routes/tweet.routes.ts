@@ -11,11 +11,11 @@ import {
 import {
   audienceValidator,
   createTweetValidator,
-  deleteTweetValidator,
   editTweetValidator,
   getTweetChildrenValidator,
   paginationValidator,
-  tweetIdValidator
+  tweetIdValidator,
+
 } from '~/middlewares/tweets.middlewares'
 import { AccessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapAsync } from '~/utils/handler'
@@ -29,6 +29,7 @@ export const tweetsRouter = Router()
  *  * Header: {Authorization: Bearer <access_token>}
  * Body: TweetRequestBody
  */
+
 tweetsRouter.post(
   '/',
   AccessTokenValidator,
@@ -93,7 +94,6 @@ tweetsRouter.get(
  */
 tweetsRouter.get(
   '/new/new-feeds',
-
   AccessTokenValidator,
   verifiedUserValidator,
   paginationValidator,
