@@ -11,6 +11,7 @@ import {
 import {
   audienceValidator,
   createTweetValidator,
+  deleteTweetValidator,
   editTweetValidator,
   getTweetChildrenValidator,
   paginationValidator,
