@@ -10,6 +10,7 @@ import { hostname } from "os";
 import { tweetsRouter } from "./routes/tweet.routes";
 import { commentsRouter } from "./routes/comment.routes";
 import bookmarksRouter from "./routes/bookmarks.routes";
+import conversationsRouter from "./routes/conversations.routes";
 config()
 databaseService
   .connect()
@@ -32,6 +33,7 @@ app.use('/users/', usersRouter)
 app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
 app.use('/bookmarks/', bookmarksRouter)
+app.use('/conversations', conversationsRouter)
 
 interface ErrorResponse {
   message: string;
