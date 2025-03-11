@@ -22,6 +22,33 @@ class StoriesService {
           console.log(error)
         }
       }
+
+      async viewAndStatusStory({ payload, user_id }: { payload: viewAndStatusStoryResBody; user_id: string }) {
+        try {
+          const result = await databaseService.stories.findOneAndUpdate(
+            {
+              _id: new ObjectId(payload.story_id),
+              user_id: new ObjectId(user_id)
+            },
+            {
+              $push: {
+                viewer: {
+                  viewer_id: [new ObjectId(user_id)],
+                  seen_at: new Date(),
+                  content: payload.content,
+                  view_status: payload.view_status
+                }
+              }
+            },
+            {
+              returnDocument: 'after'
+            }
+          )
+          return result?.viewer
+        } catch (error) {
+          console.log(error)
+        }
+      }
 }
 const storiesService = new StoriesService();
 export default storiesService
