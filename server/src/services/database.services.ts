@@ -7,6 +7,7 @@ import Hashtag from '~/models/schemas/Hashtag.schema'
 import Conversations from '~/models/schemas/conversations.schema'
 import { Bookmark } from '~/models/schemas/Bookmark.schema'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
+import Stories from '~/models/schemas/Stories.schema'
 
 const uri = `mongodb+srv://${envConfig.db_username}:${envConfig.db_password}@minhdevmongo.hzvnp.mongodb.net/?retryWrites=true&w=majority&appName=minhdevMongo`
 
@@ -79,6 +80,13 @@ class DatabaseService {
 
   get conversations(): Collection<Conversations> {
     return this.db.collection(envConfig.conversationsCollection)
+  }
+
+  get stories(): Collection<Stories> {
+    if (!this.db) {
+      throw new Error('Database not connected. Call connect() first.');
+    }
+    return this.db.collection(envConfig.storiesCollection || 'stories'); // Fallback to 'stories' if not defined
   }
 
 }

@@ -75,7 +75,8 @@ export const USERS_MESSAGES = {
   S3_LINK_IS_REQUIRED: 'S3 link is required',
   S3_LINK_MUST_BE_A_STRING: 'S3 link must be a string',
   LINK_IS_REQUIRED: 'Link is required',
-  LINK_MUST_BE_A_STRING: 'Link must be a string'
+  LINK_MUST_BE_A_STRING: 'Link must be a string',
+  REACTION_USER_ID_MUST_NOT_BE_EMPTY: 'Reaction user id must not be empty'
 } as const
 
 export const TWEET_MESSAGE = {
@@ -168,7 +169,11 @@ export const STORIES_MESSAGE = {
   PRIVACY_MUST_BE_AN_ARRAY: 'Privacy must be an array',
   PRIVACY_MUST_BE_AN_ARRAY_OF_USER_ID: 'Privacy must be an array of user id',
   STORY_ID_IS_REQUIRED: 'Story id is required',
+  STORY_ID_MUST_NOT_BE_EMPTY: 'Story id must not be empty',
   STORY_NOT_FOUND_OR_NOT_PUBLIC: 'Story not found or not public',
+  VIEW_STATUS_MUST_BE_A_STRING: 'View status must be a string',
+  VIEW_STATUS_MUST_NOT_BE_EMPTY: 'View status must not be empty',
+  VIEW_AND_STATUS_STORY_SUCCESS: 'View and status story success',
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
@@ -177,5 +182,6 @@ export const STORIES_MESSAGE = {
   STORY_LINK_IS_REQUIRED: 'Story link is required',
   STORY_LINK_MUST_BE_A_STRING: 'Story link must be a string',
   CONTENT_MUST_NOT_BE_EMPTY: 'Content must not be empty',
-  CAPTION_MUST_BE_NOT_BE_EMPTY: 'Caption must not be empty'
+  CAPTION_MUST_BE_NOT_BE_EMPTY: 'Caption must not be empty',
+  STORY_IS_NOT_YOURS_SELF_YOU_CANNOT_DELETE_IT: 'Story is not yours self you cannot delete it'
 }
