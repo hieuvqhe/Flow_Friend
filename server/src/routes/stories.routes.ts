@@ -6,6 +6,7 @@ import {
   getNewsFeedStoriesController,
   getStoryViewersController,
   reactStoryController,
+  replyStoryController,
   updateStoryStoryController,
   viewAndStatusStoryController,
   
@@ -80,6 +81,14 @@ storiesRouter.post(
   verifiedUserValidator,
   reactStoryValidator,
   wrapAsync(reactStoryController)
+)
+
+storiesRouter.post(
+  '/reply-story/:story_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  replyStoryValidator,
+  wrapAsync(replyStoryController)
 )
 
 export default storiesRouter

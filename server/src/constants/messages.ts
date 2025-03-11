@@ -182,6 +182,7 @@ export const STORIES_MESSAGE = {
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
   REACT_STORY_SUCCESS: 'React story success',
+  REPLY_STORY_SUCCESS: 'Reply story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
   STORY_NOT_EXISTS: 'Story not exists',
   STORY_NOT_PUBLIC: 'Story not public',
