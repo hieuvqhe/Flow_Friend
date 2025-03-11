@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createNewStoryController,
+  updateStoryStoryController,
   viewAndStatusStoryController,
   
 } from '~/controllers/stories.controllers'
@@ -30,6 +31,14 @@ storiesRouter.post(
     verifiedUserValidator,
     viewAndStatusStoryValidator,
     wrapAsync(viewAndStatusStoryController)
+)
+
+storiesRouter.post(
+  '/update-story',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  updateStoryValidator,
+  wrapAsync(updateStoryStoryController)
 )
 
 

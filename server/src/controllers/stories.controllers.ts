@@ -39,3 +39,12 @@ export const viewAndStatusStoryController = async (
       result
     })
 }
+
+export const updateStoryStoryController = async (req: Request<ParamsDictionary, any, any, any>, res: Response) => {
+    const { user_id } = req.decode_authorization as TokenPayload
+    const result = await storiesService.updateStory({ payload: req.body, user_id })
+    res.json({
+      message: STORIES_MESSAGE.UPDATE_STORY_SUCCESS,
+      result
+    })
+  }

@@ -49,6 +49,28 @@ class StoriesService {
           console.log(error)
         }
       }
+
+      async updateStory({ payload, user_id }: { payload: any; user_id: string }) {
+        try {
+          const result = await databaseService.stories.findOneAndUpdate(
+            {
+              _id: new ObjectId(payload.story_id as string),
+              user_id: new ObjectId(user_id)
+            },
+            {
+              $set: {
+                ...payload
+              }
+            },
+            {
+              returnDocument: 'after'
+            }
+          )
+          return result
+        } catch (error) {
+          console.log(error)
+        }
+      }
 }
 const storiesService = new StoriesService();
 export default storiesService

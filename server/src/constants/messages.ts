@@ -175,6 +175,7 @@ export const STORIES_MESSAGE = {
   VIEW_STATUS_MUST_NOT_BE_EMPTY: 'View status must not be empty',
   VIEW_AND_STATUS_STORY_SUCCESS: 'View and status story success',
   CANNOT_VIEW_AND_STATUS_YOURSELF_STORY: 'Cannot view and status yourself story',
+  UPDATE_STORY_SUCCESS: 'Update story success',
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
