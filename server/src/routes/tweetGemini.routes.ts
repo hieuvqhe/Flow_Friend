@@ -36,5 +36,18 @@ tweetGeminiRoutes.post(
   messageUploadValidator,
   wrapAsync(chatWithGeminiController)
 )
+//  * Description: gen tweet with gemini (image)
+//  * Path: /generate/gen-image
+//  * Method: POST
+//  * body: form-data {image: file}
+//  * header: {Authorization:Bearer <access_token> }
 
+tweetGeminiRoutes.post(
+  '/generate/image',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  premiumUserValidator,
+  messageUploadValidator,
+  wrapAsync(chatWithGeminiController)
+)
 export default tweetGeminiRoutes
