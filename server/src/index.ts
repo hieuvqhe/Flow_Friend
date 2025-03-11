@@ -11,6 +11,7 @@ import { tweetsRouter } from "./routes/tweet.routes";
 import { commentsRouter } from "./routes/comment.routes";
 import bookmarksRouter from "./routes/bookmarks.routes";
 import conversationsRouter from "./routes/conversations.routes";
+import storiesRouter from "./routes/stories.routes";
 config()
 databaseService
   .connect()
@@ -34,6 +35,7 @@ app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
 app.use('/bookmarks/', bookmarksRouter)
 app.use('/conversations', conversationsRouter)
+app.use('/stories', storiesRouter)
 
 interface ErrorResponse {
   message: string;
