@@ -4,6 +4,7 @@ import {
   deleteStoryController,
   getArchiveStoriesController,
   getNewsFeedStoriesController,
+  getStoryViewersController,
   updateStoryStoryController,
   viewAndStatusStoryController,
   
@@ -64,6 +65,14 @@ storiesRouter.delete(
   verifiedUserValidator,
   wrapAsync(deleteStoryController)
 )
+
+storiesRouter.get(
+  '/get-story-viewers/:story_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(getStoryViewersController)
+)
+
 
 
 export default storiesRouter

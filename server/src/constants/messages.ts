@@ -178,6 +178,7 @@ export const STORIES_MESSAGE = {
   UPDATE_STORY_SUCCESS: 'Update story success',
   GET_NEWS_FEED_STORIES_SUCCESS: 'Get news feed stories success',
   GET_ARCHIVE_STORIES_SUCCESS: 'Get archive stories success',
+  GET_STORY_VIEWERS_SUCCESS: 'Get story viewers success',
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
