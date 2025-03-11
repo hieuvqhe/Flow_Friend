@@ -181,6 +181,7 @@ export const STORIES_MESSAGE = {
   GET_STORY_VIEWERS_SUCCESS: 'Get story viewers success',
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
+  REACT_STORY_SUCCESS: 'React story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
   STORY_NOT_EXISTS: 'Story not exists',
   STORY_NOT_PUBLIC: 'Story not public',

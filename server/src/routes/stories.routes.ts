@@ -5,6 +5,7 @@ import {
   getArchiveStoriesController,
   getNewsFeedStoriesController,
   getStoryViewersController,
+  reactStoryController,
   updateStoryStoryController,
   viewAndStatusStoryController,
   
@@ -73,7 +74,13 @@ storiesRouter.get(
   wrapAsync(getStoryViewersController)
 )
 
-
+storiesRouter.post(
+  '/react-story/:story_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  reactStoryValidator,
+  wrapAsync(reactStoryController)
+)
 
 export default storiesRouter
 
