@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createNewStoryController,
+  deleteStoryController,
   getArchiveStoriesController,
   getNewsFeedStoriesController,
   updateStoryStoryController,
@@ -55,6 +56,13 @@ storiesRouter.get(
   AccessTokenValidator,
   verifiedUserValidator,
   wrapAsync(getArchiveStoriesController)
+)
+
+storiesRouter.delete(
+  '/delete-story/:story_id',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(deleteStoryController)
 )
 
 

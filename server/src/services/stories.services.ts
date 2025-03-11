@@ -258,6 +258,14 @@ class StoriesService {
           .toArray()
         return { result, total: result.length }
       }
+
+      async deleteStory({ user_id, story_id }: { user_id: string; story_id: string }) {
+        const result = await databaseService.stories.deleteOne({
+          _id: new ObjectId(story_id),
+          user_id: new ObjectId(user_id)
+        })
+        return result
+      }
 }
 const storiesService = new StoriesService();
 export default storiesService
