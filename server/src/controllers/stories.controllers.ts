@@ -16,7 +16,7 @@ export const createNewStoryController = async (
     const { user_id } = req.decode_authorization as TokenPayload
     const result = await storiesService.createNewStory({ payload: req.body, user_id })
     res.json({
-      message: STORIES_MESSAGE.CREATE_STORY_SUCCESS,
+      message: "successsuccess",
       result
     })
   }
