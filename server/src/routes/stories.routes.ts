@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createNewStoryController,
+  getNewsFeedStoriesController,
   updateStoryStoryController,
   viewAndStatusStoryController,
   
@@ -39,6 +40,13 @@ storiesRouter.post(
   verifiedUserValidator,
   updateStoryValidator,
   wrapAsync(updateStoryStoryController)
+)
+
+storiesRouter.get(
+  '/get-news-feed-stories',
+  AccessTokenValidator,
+  verifiedUserValidator,
+  wrapAsync(getNewsFeedStoriesController)
 )
 
 
