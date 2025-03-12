@@ -1,29 +1,26 @@
-import { Server } from 'socket.io'
 import Stories from '~/models/schemas/Stories.schema'
 import databaseService from '../database.services'
 import { ObjectId } from 'mongodb'
 
-class AutoDeleteStoriesSystem {
-  private io: Server | null
+class CDNCacheExpirySystem {
   private checkInterval: NodeJS.Timeout | null
 
   constructor() {
-    this.io = null
     this.checkInterval = null
   }
 
-  initialize(io: Server) {
-    this.io = io
+  initialize() {
     this.startExpiryCheck()
+    console.log('CDN Cache Expiry System initialized')
   }
 
   private startExpiryCheck() {
     this.checkInterval = setInterval(async () => {
-      await this.deleteExpiredStories()
-    }, 60 * 1000)
+      await this.handleExpiredStories()
+    }, 60 * 1000) 
   }
 
-  private async deleteExpiredStories() {
+  private async handleExpiredStories() {
     try {
       const now = new Date()
 
@@ -47,23 +44,16 @@ class AutoDeleteStoriesSystem {
           _id: { $in: expiredStoryIds }
         },
         {
-          $set: { is_active: false }
+          $set: { 
+            is_active: false,
+            cache_version: Date.now()
+          }
         }
       )
 
-      if (this.io && result.modifiedCount > 0) {
-        expiredStories.forEach((story: Stories) => {
-          this.io?.emit('story_deleted', {
-            story_id: story?._id?.toString(),
-            user_id: story.user_id.toString(),
-            expired_at: story.expires_at
-          })
-        })
-
-        console.log(`Deleted ${result.modifiedCount} expired stories`)
-      }
+      console.log(`Đã cập nhật ${result.modifiedCount} stories hết hạn trong CDN cache`)
     } catch (error) {
-      console.error('Error in deleteExpiredStories:', error)
+      console.error('Lỗi trong handleExpiredStories:', error)
     }
   }
 
@@ -75,5 +65,5 @@ class AutoDeleteStoriesSystem {
   }
 }
 
-const autoDeleteSystem = new AutoDeleteStoriesSystem()
-export default autoDeleteSystem
+const cdnCacheExpirySystem = new CDNCacheExpirySystem()
+export default cdnCacheExpirySystem
