@@ -35,7 +35,6 @@ app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
 app.use('/bookmarks/', bookmarksRouter)
 app.use('/conversations', conversationsRouter)
-app.use('/stories', storiesRouter);
 
 interface ErrorResponse {
   message: string;
