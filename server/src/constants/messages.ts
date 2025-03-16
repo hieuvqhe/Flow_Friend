@@ -187,5 +187,9 @@ export const STORIES_MESSAGE = {
   CAPTION_MUST_BE_NOT_BE_EMPTY: 'Caption must not be empty',
   STORY_IS_NOT_YOURS_SELF_YOU_CANNOT_DELETE_IT: 'Story is not yours self you cannot delete it',
   GET_STORY_VIEWERS_SUCCESS: 'Get story viewers success',
+  GET_ARCHIVE_STORIES_SUCCESS: 'Get archive stories success',
+  GET_NEWS_FEED_STORIES_SUCCESS: 'Get news feed stories success',
+  UPDATE_STORY_SUCCESS: 'Update story success',
+  CANNOT_VIEW_AND_STATUS_YOURSELF_STORY: 'Cannot view and status yourself story',
 
 }
