@@ -4,7 +4,10 @@ import { AppContext } from './Contexts/app.context';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import path from './constants/path'
 import Login from './pages/Users/Login'
+// import VerifyEmail from './pages/User/VerifyEmail'
 import ForgotPassword from './pages/Users/ForgotPassword'
+import VerifyForgotToken from './pages/Users/VerifyForgotToken'
+import ResetPassword from './pages/Users/ResetPassword'
 
 // function ProtectedRoute() {
 //     const { isAuthenticated } = useContext(AppContext)
@@ -39,6 +42,14 @@ export default function useRouteElement() {
         {
             path: path.forgotPassword,
             element: <ForgotPassword />
+        },
+        {
+            path: path.verifyForgotPassword,
+            element: <VerifyForgotToken />
+        },
+        {
+            path: path.resetPassword,
+            element: <ResetPassword />
         },
     ])
     return routeElements
