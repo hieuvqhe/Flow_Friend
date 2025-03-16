@@ -8,6 +8,7 @@ import Login from './pages/Users/Login'
 import ForgotPassword from './pages/Users/ForgotPassword'
 import VerifyForgotToken from './pages/Users/VerifyForgotToken'
 import ResetPassword from './pages/Users/ResetPassword'
+import Profile from './pages/Users/Profile/Profile'
 
 // function ProtectedRoute() {
 //     const { isAuthenticated } = useContext(AppContext)
@@ -50,6 +51,10 @@ export default function useRouteElement() {
         {
             path: path.resetPassword,
             element: <ResetPassword />
+        },
+        {
+            path: path.profile,
+            element: <Profile />
         },
     ])
     return routeElements
