@@ -196,6 +196,8 @@ export const getFollowersController = async (req: Request<ParamsDictionary, any,
 export const getProfileUserByIdController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
   const { user_id } = req.params
   const result = await usersService.getUserProfileById(user_id)
+  debugger
+  console.log(user_id);
   res.json({
     message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
     result: result

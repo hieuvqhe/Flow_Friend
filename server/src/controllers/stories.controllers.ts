@@ -107,8 +107,8 @@ export const updateStoryStoryController = async (req: Request<ParamsDictionary, 
   export const reactStoryController = async (req: Request, res: Response) => {
     const { user_id } = req.decode_authorization as TokenPayload
     const { story_id } = req.params
-    const { reaction_type } = req.body
-    const result = await storiesService.reactStory({ user_id, story_id, reaction_type })
+    const { reaction } = req.body
+    const result = await storiesService.reactStory({ user_id, story_id, reaction})
     res.json({
       message: STORIES_MESSAGE.REACT_STORY_SUCCESS,
       result

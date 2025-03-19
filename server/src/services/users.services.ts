@@ -383,7 +383,7 @@ class UserService {
   }
 
   async getUserProfileById(user_id: string) {
-    const result = await databaseService.users.findOne({ followed_user_id: new ObjectId(user_id) })
+    const result = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
     return result
   }
 

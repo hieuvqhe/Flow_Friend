@@ -1,10 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useContext } from 'react'
-import { AppContext } from './Contexts/app.context'
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { useContext } from 'react';
+import { AppContext } from './Contexts/app.context';
+import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import path from './constants/path'
 import Login from './pages/Users/Login'
+// import VerifyEmail from './pages/User/VerifyEmail'
 import ForgotPassword from './pages/Users/ForgotPassword'
+import VerifyForgotToken from './pages/Users/VerifyForgotToken'
+import ResetPassword from './pages/Users/ResetPassword'
+import Profile from './pages/Users/Profile/Profile'
 
 // function ProtectedRoute() {
 //     const { isAuthenticated } = useContext(AppContext)
@@ -39,6 +43,18 @@ export default function useRouteElement() {
         {
             path: path.forgotPassword,
             element: <ForgotPassword />
+        },
+        {
+            path: path.verifyForgotPassword,
+            element: <VerifyForgotToken />
+        },
+        {
+            path: path.resetPassword,
+            element: <ResetPassword />
+        },
+        {
+            path: path.profile,
+            element: <Profile />
         },
     ])
     return routeElements
