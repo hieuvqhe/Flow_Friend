@@ -24,13 +24,51 @@ import { wrapAsync } from '~/utils/handler'
 export const tweetsRouter = Router()
 
 /**
- * Description: Create Tweet
- * Path: /
- * Method: POST
- *  * Header: {Authorization: Bearer <access_token>}
- * Body: TweetRequestBody
+ * @swagger
+ * /tweets:
+ *   post:
+ *     summary: Create a new tweet
+ *     tags: [Tweets]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - type
+ *               - audience
+ *               - content
+ *             properties:
+ *               type:
+ *                 type: integer
+ *                 description: Tweet type
+ *               audience:
+ *                 type: integer
+ *                 description: Audience scope
+ *               content:
+ *                 type: string
+ *                 description: Tweet content
+ *               hashtags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               mentions:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               medias:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *     responses:
+ *       200:
+ *         description: Tweet created successfully
+ *       401:
+ *         description: Unauthorized
  */
-
 tweetsRouter.post(
   '/',
   AccessTokenValidator,
