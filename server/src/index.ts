@@ -12,6 +12,9 @@ import { commentsRouter } from "./routes/comment.routes";
 import bookmarksRouter from "./routes/bookmarks.routes";
 import conversationsRouter from "./routes/conversations.routes";
 import storiesRouter from "./routes/stories.routes";
+// Import swagger configurations
+import { swaggerUi, swaggerSpec } from "./configs/swagger";
+
 config()
 databaseService
   .connect()
@@ -27,14 +30,21 @@ databaseService
 const app = express()
 const httpServer = createServer(app)
 const port = envConfig.port || 3002
-app.use(helmet())
+app.use(helmet({
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false
+}))
 app.use(cors())
 app.use(express.json())
+
+// Swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use('/users/', usersRouter)
 app.use('/tweets/', tweetsRouter)
 app.use('/comments/', commentsRouter)
 app.use('/bookmarks/', bookmarksRouter)
 app.use('/conversations', conversationsRouter)
+app.use('/stories', storiesRouter)
 
 interface ErrorResponse {
   message: string;
@@ -51,4 +61,5 @@ app.use((err: Error & { status?: number }, req: express.Request, res: express.Re
 
 httpServer.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`Swagger documentation available at http://localhost:${port}/api-docs`);
 });

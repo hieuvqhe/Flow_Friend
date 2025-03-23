@@ -33,6 +33,49 @@ import {
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
 
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Login to the system
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: User email
+ *               password:
+ *                 type: string
+ *                 description: User password
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login success
+ *                 result:
+ *                   type: object
+ *                   properties:
+ *                     access_token:
+ *                       type: string
+ *                     refresh_token:
+ *                       type: string
+ *       401:
+ *         description: Unauthorized
+ */
 usersRouter.post('/login', loginValidator, wrapAsync(loginController))
 usersRouter.get('/oauth/google', wrapAsync(oauthController))
 
@@ -60,6 +103,42 @@ usersRouter.post(
 
 usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPasswordController))
 
+/**
+ * @swagger
+ * /users/follow:
+ *   post:
+ *     summary: Follow a user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - followed_user_id
+ *             properties:
+ *               followed_user_id:
+ *                 type: string
+ *                 description: ID of user to follow
+ *     responses:
+ *       200:
+ *         description: Follow successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Follower success
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
 /**
  * Description: follow someone
  * Path: /follow

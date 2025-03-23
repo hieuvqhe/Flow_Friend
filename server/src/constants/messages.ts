@@ -76,7 +76,8 @@ export const USERS_MESSAGES = {
   S3_LINK_MUST_BE_A_STRING: 'S3 link must be a string',
   LINK_IS_REQUIRED: 'Link is required',
   LINK_MUST_BE_A_STRING: 'Link must be a string',
-  REACTION_USER_ID_MUST_NOT_BE_EMPTY: 'Reaction user id must not be empty'
+  REACTION_USER_ID_MUST_NOT_BE_EMPTY: 'Reaction user id must not be empty',
+  INVALID_REFRESH_TOKEN: 'Invalid refresh token'
 } as const
 
 export const TWEET_MESSAGE = {
@@ -99,7 +100,8 @@ export const TWEET_MESSAGE = {
   TWEET_ID_MUST_BE_A_STRING: 'Tweet id must be a string',
   UNAUTHORIZED: 'Unauthorized',
   NEW_CONTENT_MUST_BE_A_NON_EMPTY_STRING: 'New content must be a non empty string',
-
+  GET_CONVERSATION_IN_AI_SUCCESS: 'Get conversation in AI success',
+  GET_CONVERSATION_IN_AI_FAILED: 'Get conversation in AI failed',
   EDIT_TWEET_SUCCESS: 'Edit tweet success',
   DELETE_TWEET_SUCCESS: 'Delete tweet success',
   INVALID_CONTENT: 'Invalid content',
@@ -128,7 +130,9 @@ export const SEARCH_MESSAGE = {
   MEDIA_TYPE_MUST_BE_ONE_OF_MEDIA_TYPE_QUERY: `Media type must be one of ${Object.values(MediaTypeQuery).join(', ')}`,
   LIMIT_IS_GREATER_THAN_1_AND_SMALL_20: 'Limit is greater than 1 and small 20',
   PAGE_IS_GREATER_THAN_1_AND_SMALL_TOTAL_PAGES: 'Page is greater than 1 and small total pages',
-  FOLLOW_USER_IS_TRUE_OR_FALSE: 'Follow user is true or false'
+  FOLLOW_USER_IS_TRUE_OR_FALSE: 'Follow user is true or false',
+  SEARCH_PEOPLE_SUCCESS: 'Search people success',
+  SEARCH_TWEETS_SUCCESS: 'Search tweets success'
 }
 
 export const CONVERSATIONS_MESSAGE = {
@@ -169,15 +173,9 @@ export const STORIES_MESSAGE = {
   PRIVACY_MUST_BE_AN_ARRAY: 'Privacy must be an array',
   PRIVACY_MUST_BE_AN_ARRAY_OF_USER_ID: 'Privacy must be an array of user id',
   STORY_ID_IS_REQUIRED: 'Story id is required',
-  STORY_ID_MUST_NOT_BE_EMPTY: 'Story id must not be empty',
   STORY_NOT_FOUND_OR_NOT_PUBLIC: 'Story not found or not public',
-  VIEW_STATUS_MUST_BE_A_STRING: 'View status must be a string',
-  VIEW_STATUS_MUST_NOT_BE_EMPTY: 'View status must not be empty',
-  VIEW_AND_STATUS_STORY_SUCCESS: 'View and status story success',
   DELETE_STORY_SUCCESS: 'Delete story success',
   EDIT_STORY_SUCCESS: 'Edit story success',
-  REACT_STORY_SUCCESS: 'React story success',
-  REPLY_STORY_SUCCESS: 'Reply story success',
   STORY_ALREADY_EXISTS: 'Story already exists',
   STORY_NOT_EXISTS: 'Story not exists',
   STORY_NOT_PUBLIC: 'Story not public',
@@ -185,11 +183,17 @@ export const STORIES_MESSAGE = {
   STORY_LINK_MUST_BE_A_STRING: 'Story link must be a string',
   CONTENT_MUST_NOT_BE_EMPTY: 'Content must not be empty',
   CAPTION_MUST_BE_NOT_BE_EMPTY: 'Caption must not be empty',
-  STORY_IS_NOT_YOURS_SELF_YOU_CANNOT_DELETE_IT: 'Story is not yours self you cannot delete it',
-  GET_STORY_VIEWERS_SUCCESS: 'Get story viewers success',
-  GET_ARCHIVE_STORIES_SUCCESS: 'Get archive stories success',
-  GET_NEWS_FEED_STORIES_SUCCESS: 'Get news feed stories success',
-  UPDATE_STORY_SUCCESS: 'Update story success',
+  STORY_ID_MUST_NOT_BE_EMPTY: 'Story id must not be empty',
+  VIEW_STATUS_MUST_BE_A_STRING: 'View status must be a string',
+  VIEW_STATUS_MUST_NOT_BE_EMPTY: 'View status must not be empty',
+  VIEW_AND_STATUS_STORY_SUCCESS: 'View and status story success',
   CANNOT_VIEW_AND_STATUS_YOURSELF_STORY: 'Cannot view and status yourself story',
-
+  UPDATE_STORY_SUCCESS: 'Update story success',
+  GET_NEWS_FEED_STORIES_SUCCESS: 'Get news feed stories success',
+  GET_ARCHIVE_STORIES_SUCCESS: 'Get archive stories success',
+  GET_STORY_VIEWERS_SUCCESS: 'Get story viewers success',
+  REACT_STORY_SUCCESS: 'React story success',
+  REPLY_STORY_SUCCESS: 'Reply story success',
+  HIDE_USER_STORIES_SUCCESS: 'Hide user stories success',
+  STORY_IS_NOT_YOURS_SELF_YOU_CANNOT_DELETE_IT: 'Story is not yours self you cannot delete it'
 }
