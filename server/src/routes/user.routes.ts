@@ -15,21 +15,23 @@ import {
   emailVerifyController,
   forgotPasswordController,
   getProfileUserByIdController,
-  updateMyProfileController
+  updateMyProfileController,
+  getAllUsersController,
+  searchUsersByNameController
 
 } from "../controllers/user.controllers";
-import { 
-  followValidator, 
-  AccessTokenValidator, 
-  verifiedUserValidator, 
+import {
+  followValidator,
+  AccessTokenValidator,
+  verifiedUserValidator,
   loginValidator,
-  registerValidator, 
+  registerValidator,
   RefreshTokenValidator,
   resetPasswordValidator,
-  verifyForgotPasswordTokenValidator, 
-  emailVerifyTokenValidator ,
+  verifyForgotPasswordTokenValidator,
+  emailVerifyTokenValidator,
   forgotPasswordValidator,
- } from "../middlewares/users.middlewares";
+} from "../middlewares/users.middlewares";
 import { wrapAsync } from '../utils/handler'
 const usersRouter = Router()
 
@@ -328,6 +330,24 @@ usersRouter.post(
 usersRouter.post('/reset-password', resetPasswordValidator, wrapAsync(resetPasswordController))
 
 /**
+ * Description: Get all users 
+ * Path: /all
+ * method: GET
+ * Header: {Authorization: Bearer <access_token>}
+ */
+usersRouter.get('/all', AccessTokenValidator, verifiedUserValidator, wrapAsync(getAllUsersController));
+
+/**
+ * Description: Search users by name
+ * Path: /search
+ * Method: GET
+ * Query: { name: string, page?: number, limit?: number }
+ * Header: { Authorization: Bearer <access_token> }
+ */
+usersRouter.get('/search', AccessTokenValidator, verifiedUserValidator, wrapAsync(searchUsersByNameController));
+
+
+/**
  * @swagger
  * /users/follow:
  *   post:
@@ -437,9 +457,9 @@ usersRouter.delete('/un-follow', AccessTokenValidator, verifiedUserValidator, fo
  */
 
 
-usersRouter.get('/followers', 
-  AccessTokenValidator, 
-  verifiedUserValidator, 
+usersRouter.get('/followers',
+  AccessTokenValidator,
+  verifiedUserValidator,
   wrapAsync(getFollowersController)
 )
 
@@ -477,7 +497,7 @@ usersRouter.get('/followers',
  * method: get
  * body: {user_id: string}
  */
-usersRouter.get('/following', AccessTokenValidator, verifiedUserValidator , wrapAsync(getFollowingController))
+usersRouter.get('/following', AccessTokenValidator, verifiedUserValidator, wrapAsync(getFollowingController))
 
 /**
  * @swagger

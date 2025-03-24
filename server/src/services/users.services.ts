@@ -236,6 +236,81 @@ class UserService {
     }
   }
 
+  async getAllUsers(page: number = 1, limit: number = 10) {
+    try {
+      const skip = (page - 1) * limit; // Tính số lượng bản ghi cần bỏ qua
+      const users = await databaseService.users
+        .find({}, {
+          projection: {
+            _id: 1,
+            name: 1,
+            username: 1,
+            email: 1,
+            avatar: 1
+          }
+        })
+        .skip(skip) // Bỏ qua các bản ghi trước đó
+        .limit(limit) // Giới hạn số lượng bản ghi trả về
+        .toArray();
+
+      // Đếm tổng số người dùng để biết còn dữ liệu để tải hay không
+      const totalUsers = await databaseService.users.countDocuments();
+
+      return {
+        users,
+        total: totalUsers,
+        page,
+        limit,
+        totalPages: Math.ceil(totalUsers / limit)
+      };
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return { users: [], total: 0, page, limit, totalPages: 0 };
+    }
+  }
+
+  // Trong UserService
+  async searchUsersByName(name: string, page: number = 1, limit: number = 10) {
+    try {
+      const skip = (page - 1) * limit;
+      // Tìm kiếm người dùng với name khớp (không phân biệt hoa thường)
+      const users = await databaseService.users
+        .find(
+          {
+            name: { $regex: name, $options: 'i' }, // Tìm kiếm không phân biệt hoa thường
+          },
+          {
+            projection: {
+              _id: 1,
+              name: 1,
+              username: 1,
+              email: 1,
+              avatar: 1,
+            },
+          }
+        )
+        .skip(skip)
+        .limit(limit)
+        .toArray();
+
+      // Đếm tổng số người dùng khớp với tìm kiếm
+      const totalUsers = await databaseService.users.countDocuments({
+        name: { $regex: name, $options: 'i' },
+      });
+
+      return {
+        users,
+        total: totalUsers,
+        page,
+        limit,
+        totalPages: Math.ceil(totalUsers / limit),
+      };
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return { users: [], total: 0, page, limit, totalPages: 0 };
+    }
+  }
+
   async follow(user_id: string, followed_user_id: string) {
     const user_follower = await databaseService.followers.findOne({
       user_id: new ObjectId(user_id),
@@ -275,10 +350,50 @@ class UserService {
     }
   }
 
-  async getFollowing(user_id: string) {
-    const result = await databaseService.followers.find({ user_id: new ObjectId(user_id) }).toArray()
+  // async getFollowing(user_id: string) {
+  //   const result = await databaseService.followers.find({ user_id: new ObjectId(user_id) }).toArray()
 
-    return result
+  //   return result
+  // }
+
+  async getFollowing(user_id: string) {
+    // Lấy danh sách following từ collection followers
+    const followers = await databaseService.followers
+      .find({ user_id: new ObjectId(user_id) })
+      .toArray();
+
+    // Lấy danh sách followed_user_id từ followers
+    const followerIds = followers.map((f) => f.followed_user_id);
+
+    // Lấy thông tin chi tiết của từng người dùng từ collection users
+    const followerDetails = await databaseService.users
+      .find(
+        { _id: { $in: followerIds } },
+        { projection: { _id: 1, name: 1, username: 1, email: 1, avatar: 1 } } // Chỉ lấy các trường cần thiết
+      )
+      .toArray();
+
+    // Chuyển đổi dữ liệu chi tiết của người dùng thành định dạng mong muốn
+    const followerDetailsFormatted = followerDetails.map((user) => ({
+      _id: user._id.toString(),
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      avatar: user.avatar || null,
+    }));
+
+    // Tạo mảng result theo định dạng mong muốn
+    const result = [
+      ...followers.map((follower) => ({
+        _id: follower._id.toString(),
+        user_id: follower.user_id.toString(),
+        followed_user_id: follower.followed_user_id.toString(),
+        created_at: follower.created_at,
+        followingDetails: followerDetailsFormatted
+      }))
+    ];
+
+    return result; // Trả về trực tiếp mảng result
   }
 
   async getFollowers(user_id: string) {
@@ -329,7 +444,7 @@ class UserService {
       message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
     }
   }
-  
+
 
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const forgot_password_token = await this.forgotPasswordToken({ user_id, verify: verify })

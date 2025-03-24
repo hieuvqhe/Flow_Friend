@@ -1,28 +1,88 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useRef, useEffect, useContext } from 'react'
-import { GoVerified } from 'react-icons/go'
-import { FaEllipsisH } from 'react-icons/fa'
-import SearchGrowing from '../Customs/SearchGrowing'
-import Notification from '../Customs/Notification'
-import { AppContext } from '../../Contexts/app.context'
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { HiOutlineBadgeCheck } from 'react-icons/hi';
+import { BiDotsHorizontalRounded, BiTrendingUp, BiSearch } from 'react-icons/bi';
+import { AppContext } from '@/Contexts/app.context';
+import { Link, useNavigate } from 'react-router-dom';
+import path from '@/constants/path';
+import userApi from '@/apis/users.api';
+
+// Định nghĩa kiểu dữ liệu cho Suggested User (dựa trên dữ liệu từ API)
+interface SuggestedUser {
+  _id: string;
+  name: string;
+  handle: string;
+  avatar: string | null;
+  verified: boolean;
+}
 
 const RightPart: React.FC = () => {
-  const { profile } = useContext(AppContext)
-  const [isModalOpen, setIsModalOpen] = useState<number | null>(null)
-  const modalRefs = useRef<(HTMLDivElement | null)[]>([])
-  const ellipsisRefs = useRef<(HTMLDivElement | null)[]>([])
+  const { profile } = useContext(AppContext);
+  const [isModalOpen, setIsModalOpen] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const modalRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ellipsisRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // State để lưu danh sách người dùng từ API
+  const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [following, setFollowing] = useState<string[]>([]);
+  const navigate = useNavigate();
+
+  // Lấy danh sách người dùng đang follow khi component mount
+  useEffect(() => {
+    const fetchFollowing = async () => {
+      try {
+        const response = await userApi.getFollowing();
+        const followingIds = response.data.result.map((user: any) => user.followed_user_id.toString());
+        setFollowing(followingIds);
+      } catch (err) {
+        console.error('Error fetching following list:', err);
+      }
+    };
+
+    fetchFollowing();
+  }, []);
+
+  // Gọi API getAllUsers khi component được mount
+  useEffect(() => {
+    const fetchSuggestedUsers = async (pageNum: number) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await userApi.getAllUsers(pageNum, 10);
+        const users = response.data.result.users
+          .map((user: any) => ({
+            _id: user._id,
+            name: user.name,
+            handle: `@${user.email.split('@')[0]}`,
+            avatar: user.avatar || '/avatars/default.jpg',
+            verified: false,
+          }))
+          .slice(0, 5);
+        setSuggestedUsers(users);
+      } catch (err) {
+        console.error('Error fetching suggested users:', err);
+        setError('Không thể tải danh sách người dùng. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSuggestedUsers(page);
+  }, [page]);
 
   const handleOptionClick = (index: number, event: React.MouseEvent) => {
-    event.stopPropagation()
+    event.stopPropagation();
     if (isModalOpen === index) {
-      setIsModalOpen(null)
-      return
+      setIsModalOpen(null);
+      return;
     }
+    setIsModalOpen(index);
+  };
 
-    // Mở modal cho item được chọn
-    setIsModalOpen(index)
-  }
-  // Đóng modal khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const isOutside = ellipsisRefs.current.every(
@@ -31,108 +91,209 @@ const RightPart: React.FC = () => {
           !ref.contains(event.target as Node) &&
           modalRefs.current[index] &&
           !modalRefs.current[index]?.contains(event.target as Node)
-      )
+      );
 
       if (isOutside) {
-        setIsModalOpen(null)
+        setIsModalOpen(null);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleRemoveTrend = (option: string) => {
-    setIsModalOpen(null)
-  }
+    setIsModalOpen(null);
+  };
+
+  const handleWhoToFollow = () => {
+    navigate('/user/who-to-follow');
+  };
+
+  const trendingTopics = [
+    { name: 'Technology', category: 'Trending in Tech', count: '5.2K posts' },
+    { name: 'Science', category: 'Trending in Education', count: '3.8K posts' },
+    { name: 'Health', category: 'Trending in Wellness', count: '2.9K posts' },
+    { name: 'Art', category: 'Trending in Culture', count: '1.7K posts' },
+  ];
+
+  // Xử lý follow/unfollow
+  const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
+    try {
+      if (isFollowing) {
+        // Unfollow
+        await userApi.unfollowUser(userId);
+        setFollowing((prev) => prev.filter((id) => id !== userId));
+      } else {
+        // Follow
+        await userApi.followUser(userId);
+        setFollowing((prev) => [...prev, userId]);
+      }
+    } catch (err) {
+      console.error('Error toggling follow:', err);
+      alert('Không thể thực hiện hành động này. Vui lòng thử lại.');
+    }
+  };
+
   return (
-    <div className='w-full max-w-xs px-4 space-y-5'>
-      <Notification userId={profile?._id as string} />
-      <SearchGrowing />
-
-      {/* Expiring Section */}
-      <div className='bg-blue-800 text-white rounded-xl p-4 space-y-2 '>
-        <p className='font-bold'>Expiring soon!</p>
-        <p className='text-sm'>Get 40% off X Premium. Unlock the best of X.</p>
-        <button className='bg-white text-blue-800 font-semibold px-4 py-2 rounded-full'>Subscribe</button>
+    <div className="sticky hidden sm:flex flex-col p-2 h-full gap-3 xl:w-[340px]">
+      <div className="relative group mt-3 border-gray-300">
+        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+          <BiSearch className="h-5 w-5 text-gray-400" />
+        </div>
+        <input
+          type="text"
+          placeholder="Search PulseVibe"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-black border-3 ring-1 ring-white border-white w-full pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 hover:ring focus:ring-white transition-all duration-200"
+        />
       </div>
 
-      {/* What's Happening Section */}
-      <div className='bg-black text-white rounded-lg p-4 space-y-3 border border-white/20'>
-        <h2 className='font-bold text-lg'>What's happening</h2>
-        <div className='space-y-3 relative'>
-          {['allegra mccrain', 'sharita sandrowicz', 'elton flockhart', 'petrina boursaw'].map((trend, index) => (
-            <div
-              key={index}
-              className='flex justify-between items-center text-sm hover:bg-gray-700 rounded-lg p-2 relative'
-            >
-              <div>
-                <p className='text-gray-400'>Trending in Vietnam</p>
-                <p>{trend}</p>
-              </div>
-              <div ref={(el) => { ellipsisRefs.current[index] = el }} className='relative'>
-                <FaEllipsisH
-                  className='ml-2 text-gray-500 text-lg cursor-pointer hover:text-gray-400'
-                  onClick={(e) => handleOptionClick(index, e)}
-                />
+      <div className="bg-gray-900 border-b border-gray-700 rounded-xl p-5 text-white shadow-md">
+        <h2 className="font-bold text-lg mb-2">Unlock Premium Features</h2>
+        <p className="text-gray-300 text-sm mb-4">Get exclusive tools, analytics, and customization options.</p>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-sm">
+            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Ad-free experience</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Enhanced analytics</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Priority support</span>
+          </div>
+        </div>
+        <Link to={path.subscription}>
+          <button className="w-full bg-indigo-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-indigo-500 transition-colors">
+            Upgrade Now
+          </button>
+        </Link>
+      </div>
 
-                {/* Modal cho từng item */}
-                {isModalOpen === index && (
-                  <div
-                    ref={(el) => { modalRefs.current[index] = el }}
-                    className='absolute z-50 top-full right-0 mt-2 bg-black border border-gray-700 rounded-lg shadow-lg w-52'
-                  >
-                    <ul className='py-1'>
-                      <li
-                        className='px-4 py-2 text-sm hover:bg-gray-800 cursor-pointer'
-                        onClick={() => handleRemoveTrend('duplicate')}
-                      >
-                        This trend is duplicate
-                      </li>
-                      <li
-                        className='px-4 py-2 text-sm hover:bg-gray-800 cursor-pointer'
-                        onClick={() => handleRemoveTrend('harmful')}
-                      >
-                        This trend is harmful
-                      </li>
-                    </ul>
+      <div className="bg-gray-900 border-b rounded-xl shadow-sm border border-gray-700 overflow-hidden">
+        <div className="p-4 border-b border-gray-700">
+          <h2 className="font-bold text-gray-200">Suggested Connections</h2>
+        </div>
+
+        {/* Hiển thị trạng thái loading hoặc lỗi */}
+        {loading && (
+          <div className="p-4 text-center text-gray-400">
+            <p>Loading...</p>
+          </div>
+        )}
+        {error && (
+          <div className="p-4 text-center text-red-400">
+            <p>{error}</p>
+          </div>
+        )}
+
+        {/* Hiển thị danh sách người dùng từ API */}
+        {!loading && !error && suggestedUsers.length === 0 && (
+          <div className="p-4 text-center text-gray-400">
+            <p>No suggested users found.</p>
+          </div>
+        )}
+
+        {!loading && !error && suggestedUsers.length > 0 && (
+          <div className="divide-y divide-gray-700">
+            {suggestedUsers.map((user, index) => {
+              // Kiểm tra xem user có đang được theo dõi hay không
+              const isFollowing = following.includes(user._id);
+
+              return (
+                <div key={user._id} className="p-4 hover:bg-gray-800 transition-colors duration-150">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-700 flex-shrink-0 overflow-hidden">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-indigo-200">
+                            {user.name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <p className="font-medium text-sm text-gray-200">{user.name}</p>
+                          {user.verified && <HiOutlineBadgeCheck className="text-indigo-400 h-4 w-4" />}
+                        </div>
+                        <p className="text-sm text-gray-400">{user.handle}</p>
+                      </div>
+                    </div>
+
+                    {/* Nút Follow/Unfollow */}
+                    <button
+                      onClick={() => handleFollowToggle(user._id, isFollowing)}
+                      disabled={loading}
+                      className={`px-3 py-1 text-xs font-medium rounded-full transition-colors duration-200 ${isFollowing
+                        ? 'bg-gray-600 text-gray-400 hover:bg-gray-500 hover:text-gray-200'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-500'
+                        }`}
+                    >
+                      {isFollowing ? 'Following' : 'Follow'}
+                    </button>
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="p-3 bg-gray-800 border-t border-gray-700">
+          <button onClick={handleWhoToFollow} className="w-full text-center text-sm text-indigo-400 font-medium hover:underline py-1">
+            Show more suggestions
+          </button>
         </div>
-        <button className='text-blue-400 hover:underline'>Show more</button>
       </div>
 
-      {/* Who to Follow Section */}
-      <div className='bg-black text-white rounded-lg p-4 space-y-3 border border-white/20'>
-        <h2 className='font-bold text-lg'>Who to follow</h2>
-        <div className='space-y-3'>
-          {[
-            { name: 'Viet Nam Government', handle: '@VNGovtPortal' },
-            { name: 'Viet Nam Diplomacy', handle: '@MOFAVietNam' },
-            { name: 'UK in Viet Nam', handle: '@UKinVietNam' }
-          ].map((user, index) => (
-            <div key={index} className='flex justify-between items-center text-sm'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-10 h-10 bg-gray-700 rounded-full'></div>
-                <div>
-                  <p className='text-white hover:text-blue-400 cursor-pointer'>{user.name}</p>
-                  <p className='text-gray-400'>{user.handle}</p>
-                </div>
-                <GoVerified className='text-blue-500 text-lg' />
-              </div>
-              <button className='bg-white text-black font-semibold px-4 py-1 rounded-full'>Follow</button>
-            </div>
-          ))}
+      <div className="text-xs text-gray-500">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mb-2 justify-center">
+          <a href="#" className="hover:underline">
+            Terms
+          </a>
+          <a href="#" className="hover:underline">
+            Privacy
+          </a>
+          <a href="#" className="hover:underline">
+            Cookies
+          </a>
+          <a href="#" className="hover:underline">
+            Accessibility
+          </a>
+          <a href="#" className="hover:underline">
+            Advertising
+          </a>
         </div>
-        <button className='text-blue-400 hover:underline'>Show more</button>
+        <p className="text-center">© 2025 Flow Friend, Inc.</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RightPart
+export default RightPart;

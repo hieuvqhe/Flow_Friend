@@ -8,8 +8,8 @@ const NavigationMenu = [
   { title: 'Messages', icon: <BiMessageSquareDetail />, path: '/messages' },
   { title: 'Bookmarks', icon: <BiBookmark />, path: '/user/bookmarks' },
   { title: 'Analytics', icon: <HiOutlineChartBar />, path: '/analytics' },
-  { title: 'My Stories', icon: <BiBook />, path: '/my-stories' },
-  { title: 'Profile', icon: <BiUser />, path: '/profile' },
+  { title: 'Stories', icon: <BiBook />, path: '/user/story' },
+  { title: 'Profile', icon: <BiUser />, path: '/user/profile' },
   { title: 'Settings', icon: <BiCog />, path: '/settings' }
 ]
 

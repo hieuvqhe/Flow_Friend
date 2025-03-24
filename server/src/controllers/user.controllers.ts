@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
-import { 
-  FollowReqBody, 
-  TokenPayload, 
-  RefreshTokenReqBody, 
-  VerifyEmailReqBody, 
+import {
+  FollowReqBody,
+  TokenPayload,
+  RefreshTokenReqBody,
+  VerifyEmailReqBody,
   ForgotPasswordReqBody,
   VerifyForgotPasswordReqBody,
   ResetPasswordReqBody,
   UpdateMeReqBody
- } from "../models/request/User.request";
+} from "../models/request/User.request";
 import { config } from "dotenv";
 import { envConfig } from "../constants/config";
 import User from '~/models/schemas/User.schema'
@@ -20,7 +20,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { WithId } from 'mongodb'
 import { ObjectId } from 'bson'
 import { UserVerifyStatus } from '~/constants/enums'
-import { LoginReqBody,RegisterReqBody, LogoutReqBody } from "../models/request/User.request";
+import { LoginReqBody, RegisterReqBody, LogoutReqBody } from "../models/request/User.request";
 import { pick } from "lodash";
 
 config();
@@ -28,7 +28,7 @@ config();
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const user = req.user as User
   const user_id = user._id as ObjectId
-  
+
   console.log(`User logged in with user_id: ${user_id.toString()}`)
   const result = await usersService.login({ user_id: user_id.toString(), verify: UserVerifyStatus.Verified })
   res.status(200).json({
@@ -161,6 +161,64 @@ export const resetPasswordController = async (
   res.json({ message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS, result })
 }
 
+export const getAllUsersController = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const result = await usersService.getAllUsers(page, limit);
+    res.json({
+      message: 'Fetched users successfully',
+      result: {
+        users: result.users,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      message: 'Failed to fetch users',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+export const searchUsersByNameController = async (req: Request, res: Response) => {
+  try {
+    const name = req.query.name as string;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    if (!name) {
+      res.status(400).json({
+        message: 'Name query parameter is required',
+      });
+      return;
+    }
+
+    const result = await usersService.searchUsersByName(name, page, limit);
+    res.json({
+      message: 'Searched users successfully',
+      result: {
+        users: result.users,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages,
+      },
+    });
+  } catch (error) {
+    console.error('Error searching users:', error);
+    res.status(500).json({
+      message: 'Failed to search users',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
 export const followController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
   const { user_id } = req.decode_authorization as TokenPayload
   const { followed_user_id } = req.body
@@ -174,7 +232,7 @@ export const unFollowController = async (req: Request<ParamsDictionary, any, Fol
   const result = await usersService.unFollow(user_id, followed_user_id)
   res.json(result)
 }
- 
+
 export const getFollowingController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
   const { user_id } = req.decode_authorization as TokenPayload
   const result = await usersService.getFollowing(user_id)
