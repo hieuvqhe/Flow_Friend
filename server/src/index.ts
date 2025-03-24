@@ -14,6 +14,10 @@ import conversationsRouter from "./routes/conversations.routes";
 import storiesRouter from "./routes/stories.routes";
 // Import swagger configurations
 import { swaggerUi, swaggerSpec } from "./configs/swagger";
+import { likesTweetRouter } from "./routes/like.routes";
+import tweetGeminiRoutes from "./routes/tweetGemini.routes";
+import paymentRouter from "./routes/payment.routes";
+import { searchRouter } from "./routes/search.routes";
 
 config()
 databaseService
@@ -45,7 +49,10 @@ app.use('/comments/', commentsRouter)
 app.use('/bookmarks/', bookmarksRouter)
 app.use('/conversations', conversationsRouter)
 app.use('/stories', storiesRouter)
-
+app.use('/likes', likesTweetRouter)
+app.use('/geminiTweet', tweetGeminiRoutes)
+app.use('/payments', paymentRouter)
+app.use('/search', searchRouter)
 interface ErrorResponse {
   message: string;
   stack?: string;

@@ -1,5 +1,5 @@
 import { checkSchema, ParamSchema } from "express-validator";
-import { USERS_MESSAGES } from "../constants/messages";
+import { TWEET_MESSAGE, USERS_MESSAGES } from "../constants/messages";
 import { validate } from "../utils/validation";
 import { ObjectId } from "bson";
 import { ErrorWithStatus } from "../models/Errors";
@@ -7,7 +7,7 @@ import HTTP_STATUS from "../constants/httpStatus";
 import databaseService from "../services/database.services";
 import { NextFunction, RequestHandler, Request } from "express";
 import { TokenPayload } from "../models/request/User.request";
-import { UserVerifyStatus } from "../constants/enums";
+import { AccountStatus, UserVerifyStatus } from "../constants/enums";
 import { verifyAccessToken } from "../utils/common";
 import { hashPassword } from "~/utils/crypto";
 import usersService from "~/services/users.services";
@@ -286,6 +286,31 @@ export const verifiedUserValidator: RequestHandler = (req: Request, res, next: N
 }
 
 
+export const deleteS3Validator = validate(
+  checkSchema(
+    {
+      url: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.S3_LINK_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: USERS_MESSAGES.S3_LINK_MUST_BE_A_STRING
+        }
+      },
+      link: {
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.LINK_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: USERS_MESSAGES.LINK_MUST_BE_A_STRING
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+
 export const AccessTokenValidator = validate(
   checkSchema(
     {
@@ -416,6 +441,38 @@ export const resetPasswordValidator = validate(
 )
 
 
+export const premiumUserValidator = validate(
+  checkSchema(
+    {
+      user_id: {
+        custom: {
+          options: async (value, { req }) => {
+            const user_id = req.decode_authorization.user_id
+            const user = await databaseService.users.findOne({
+              _id: new ObjectId(user_id as string)
+            })
+
+            if (user?.typeAccount === AccountStatus.FREE && user.count_type_account > 5) {
+              throw new ErrorWithStatus({
+                message: TWEET_MESSAGE.PREMIUM_USER_REQUIRED,
+                status: HTTP_STATUS.FORBIDDEN
+              })
+            }
+            if (user?.typeAccount === AccountStatus.PREMIUM && user.count_type_account > 40) {
+              throw new ErrorWithStatus({
+                message: TWEET_MESSAGE.PLATINUM_USER_REQUIRED,
+                status: HTTP_STATUS.FORBIDDEN
+              })
+            }
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+)
+
+
 export const changePasswordValidator = validate(
   checkSchema({
     old_password: passwordSchema,
@@ -451,3 +508,4 @@ export const changePasswordValidator = validate(
     }
   })
 )
+

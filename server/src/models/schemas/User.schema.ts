@@ -21,14 +21,15 @@ interface UserType {
   twitter_circle?: ObjectId[]
   typeAccount: AccountStatus
   count_type_account: number
+  subscription_end_date?: Date
   bio?: string
   location?: string
   website?: string
   username?: string
   avatar?: string
   cover_photo?: string
-  is_online?: boolean // Thêm trường mới
-  last_active?: Date // Thêm trường mới
+  is_online?: boolean
+  last_active?: Date
 }
 
 export default class User {
@@ -45,6 +46,7 @@ export default class User {
   twitter_circle: ObjectId[]
   typeAccount: AccountStatus
   count_type_account: number
+  subscription_end_date?: Date
   bio: string
   location: string
   website: string
@@ -69,6 +71,7 @@ export default class User {
     this.twitter_circle = user.twitter_circle || []
     this.typeAccount = user.typeAccount || AccountStatus.FREE
     this.count_type_account = user.count_type_account || 0
+    this.subscription_end_date = user.subscription_end_date || date
     this.bio = user.bio || ''
     this.location = user.location || ''
     this.website = user.website || ''

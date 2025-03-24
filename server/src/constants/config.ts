@@ -8,6 +8,7 @@ config({
 })
 
 export const envConfig = {
+  valkey_url: process.env.VALKEY_URL,
   port: process.env.PORT,
   host: process.env.HOST,
   db_username: process.env.DB_USERNAME,
@@ -22,11 +23,11 @@ export const envConfig = {
   VideoStatusCollection: process.env.DB_VIDEO_STATUS_COLLECTION as string,
   hashtagsCollection: process.env.DB_HASHTAGS_COLLECTION as string,
   bookmarksCollection: process.env.DB_BOOKMARKS_COLLECTION as string,
-  notificationCollection: process.env.DB_NOTIFICATION_COLLECTION as string,
   commentCollection: process.env.DB_COMMENTS_COLLECTION as string,
   likesCollection: process.env.DB_LIKES_COLLECTION as string,
   conversationsCollection: process.env.DB_CONVERSATIONS_COLLECTION as string,
   storiesCollection: process.env.DB_STORIES_COLLECTION as string,
+  notificationCollection: process.env.DB_NOTIFICATION_COLLECTION as string,
   region: process.env.AWS_REGION,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -44,5 +45,13 @@ export const envConfig = {
   client_id: process.env.GOOGLE_CLIENT_ID,
   client_secret: process.env.GOOGLE_CLIENT_SECRET,
   redirect_uri: process.env.GOOGLE_REDIRECT_URI,
-  client_url: process.env.CLIENT_URL
+  client_url: process.env.CLIENT_URL,
+  token_expiry_seconds: parseInt(process.env.DB_REFRESH_TOKENS_COLLECTION || '604800'),
+  paymentCollection: process.env.DB_PAYMENT_COLLECTION as string,
+  vnpay_tmn_code: process.env.VNPAY_TMN_CODE,
+  vnpay_hash_secret: process.env.VNPAY_HASH_SECRET,
+  vnpay_url: process.env.VNPAY_URL,
+  vnpay_api_url: process.env.VNPAY_API_URL,
+  vnpay_return_url: process.env.VNPAY_RETURN_URL,
+  payment_notify_url: process.env.PAYMENT_NOTIFY_URL
 }
