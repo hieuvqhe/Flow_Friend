@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import bookmarksApi from '../../../apis/bookmarks.api';
 import { Bookmark } from '../../../types/Bookmarks.type';
-import Navigation from '../../../components/Naigation';
+import Navigation from '../../../components/Navigation/Navigation';
 import RightPart from '../../../components/RightPart';
 
 const Bookmarks = () => {
